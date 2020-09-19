@@ -319,3 +319,85 @@ static void Main(string[] args)
     Console.ReadKey();
 }
 ```
+## Передача параметров по ссылке и значению. Выходные параметры.
+**Передача параметров по значению**
+```
+class Program
+{
+    static void Main(string[] args)
+    {
+        Sum(10, 15);        // параметры передаются по значению
+        Console.ReadKey();
+    }
+    static int Sum(int x, int y)
+    {
+        return x + y;
+    }
+}
+```
+**Передача параметров по ссылке и модификатор ref**
+```
+static void Main(string[] args)
+{
+    int x = 10;
+    int y = 15;
+    Addition(ref x, y); // вызов метода
+    Console.WriteLine(x);   // 25
+ 
+    Console.ReadLine();
+}
+// параметр x передается по ссылке
+static void Addition(ref int x, int y)
+{
+    x += y;
+}
+```
+**Выходные параметры. Модификатор out**  
+Здесь результат возвращается не через оператор return, а через выходной параметр, мы можем вернуть из метода не один вариант, а несколько. По сути, как и в случае с ключевым словом ref, ключевое слово out применяется для передачи аргументов по ссылке. Однако в отличие от ref для переменных, которые передаются с ключевым словам out, не требуется инициализация. И кроме того, вызываемый метод должен обязательно присвоить им значение.
+```
+static void Sum(int x, int y, out int a)
+{
+    a = x + y;
+}
+
+static void Main(string[] args)
+{
+    int x = 10;
+     
+    int z;
+     
+    Sum(x, 15, out z);
+     
+    Console.WriteLine(z);
+ 
+    Console.ReadKey();
+}
+
+static void Main(string[] args)
+{
+    int x = 10;
+    int area;
+    int perimetr;
+    GetData(x, 15, out area, out perimetr);
+    Console.WriteLine("Площадь : " + area);
+    Console.WriteLine("Периметр : " + perimetr);
+ 
+    Console.ReadKey();
+}
+static void GetData(int x, int y, out int area, out int perim)
+{
+    area= x * y;
+    perim= (x + y)*2; 
+}
+```
+**Входные параметры. Модификатор in**  
+Модификатор in указывает, что данный параметр будет передаваться в метод по ссылке, однако внутри метода его значение параметра нельзя будет изменить.
+```
+static void GetData(in int x, int y, out int area, out int perim)
+{
+    // x = x + 10; нельзя изменить значение параметра x, т.к. он с модификатором in
+    y = y + 10;
+    area = x * y;
+    perim = (x + y) * 2;
+}
+```
