@@ -740,3 +740,160 @@ namespace HelloApp
     }
 }
 ```
+## Модификаторы доступа  
+Если для полей и методов не определен модификатор доступа, то по умолчанию для них применяется модификатор private  
+Классы и структуры, объявленные без модификатора, по умолчанию имеют доступ internal  
+Все классы и структуры, определенные напрямую в пространствах имен и не являющиеся вложенными в другие классы, могут иметь только модификаторы public или internal.  
+- **public**: публичный, общедоступный класс или член класса. Такой член класса доступен из любого места в коде, а также из других программ и сборок.
+- **private**: закрытый класс или член класса. Представляет полную противоположность модификатору public. Такой закрытый класс или член класса доступен только из кода в том же классе или контексте.
+- **protected**: такой член класса доступен из любого места в текущем классе или в производных классах. При этом производные классы могут располагаться в других сборках.
+- **internal**: класс и члены класса с подобным модификатором доступны из любого места кода в той же сборке, однако он недоступен для других программ и сборок (как в случае с модификатором public).
+- **protected internal**: совмещает функционал двух модификаторов. Классы и члены класса с таким модификатором доступны из текущей сборки и из производных классов.
+- **private protected**: такой член класса доступен из любого места в текущем классе или в производных классах, которые определены в той же сборке.
+
+## Свойства
+```
+[модификатор_доступа] возвращаемый_тип произвольное_название
+{
+    // код свойства
+}
+```
+```
+class Person
+{
+    private int age;
+ 
+    public int Age
+    {
+        set
+        {
+            if (value < 18)
+            {
+                Console.WriteLine("Возраст должен быть больше 17");
+            }
+            else
+            {
+                age = value;
+            }
+        }
+        get { return age; }
+    }
+}
+
+// -----------------------------
+
+class Person
+{
+    private string name;
+    // свойство только для чтения
+    public string Name
+    {
+        get
+        {
+            return name;
+        }
+    }
+ 
+    private int age;
+    // свойство только для записи
+    public int Age
+    {
+        set
+        {
+            age = value;
+        }
+    }
+}
+```
+**Сокращенная запись свойств**
+```
+class Person
+{
+    private string name;
+     
+    // эквивалентно public string Name { get { return name; } }
+    public string Name => name;
+}
+```
+**Автоматические свойства**
+```
+class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+         
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+}
+
+// ------------------------------
+
+class Person
+{
+    public string Name { get; set; } = "Tom"; // значения по умолчанию
+    public int Age { get; set; } = 23;
+}
+     
+class Program
+{
+    static void Main(string[] args)
+    {
+        Person person = new Person();
+        Console.WriteLine(person.Name); // Tom
+        Console.WriteLine(person.Age);  // 23
+         
+        Console.Read();
+    }
+}
+```
+## Перегрузка методов
+И в языке C# мы можем создавать в классе несколько методов с одним и тем же именем, но разной сигнатурой.  
+Сигнатура складывается из следующих аспектов:
+- Имя метода
+- Количество параметров
+- Типы параметров
+- Порядок параметров
+- Модификаторы параметров
+```
+class Calculator
+{
+    public void Add(int a, int b)
+    {
+        int result = a + b;
+        Console.WriteLine($"Result is {result}");
+    }
+    public void Add(int a, int b, int c)
+    {
+        int result = a + b + c;
+        Console.WriteLine($"Result is {result}");
+    }
+    public int Add(int a, int b, int c, int d)
+    {
+        int result = a + b + c + d;
+        Console.WriteLine($"Result is {result}");
+        return result;
+    }
+    public void Add(double a, double b)
+    {
+        double result = a + b;
+        Console.WriteLine($"Result is {result}");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Calculator calc = new Calculator();
+        calc.Add(1, 2); // 3
+        calc.Add(1, 2, 3); // 6
+        calc.Add(1, 2, 3, 4); // 10
+        calc.Add(1.4, 2.5); // 3.9
+         
+        Console.ReadKey();
+    }
+}
+```
