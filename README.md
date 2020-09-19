@@ -98,6 +98,40 @@ enum Time : byte
     Night
 }
 ```
+**Кортежи - tuple**  
+Набор значений. В дальнейшем мы можем обращаться к каждому из этих значений через поля с названиями Item[порядковый_номер_поля_в_кортеже].
+```
+static void Main(string[] args)
+{
+    var tuple = (5, 10); // В данном случае тип определяется неявно.
+    (int, int) tuple2 = (5, 10); // Тип определяется явно.    
+    (string, int, double) tuple3 = ("Tom", 25, 81.23);
+    
+    Console.WriteLine(tuple.Item1); // 5
+    Console.WriteLine(tuple.Item2); // 10
+    tuple.Item1 += 26;
+    Console.WriteLine(tuple.Item1); // 31
+    Console.Read();
+    
+    var tuple4 = (count:5, sum:10); // Мы также можем дать названия полям кортежа.
+    Console.WriteLine(tuple4.count); // 5
+    Console.WriteLine(tuple4.sum); // 10
+    
+    var (name, age) = ("Tom", 23); // Мы даже можем не использовать переменную для определения всего кортежа, а использовать отдельные переменные для его полей.
+    
+    var tuple6 = GetValues();
+    Console.WriteLine(tuple6.Item1); // 1
+    Console.WriteLine(tuple6.Item2); // 3
+     
+    Console.Read();
+}
+
+private static (int, int) GetValues()
+{
+    var result = (1, 3);
+    return result;
+}
+```
 **Неявная типизация**: компиляции компилятор сам выводит тип данных исходя из присвоенного значения
 ```
 var hello = "Hell to World";
