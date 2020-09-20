@@ -771,6 +771,37 @@ namespace HelloApp
 - **protected internal**: совмещает функционал двух модификаторов. Классы и члены класса с таким модификатором доступны из текущей сборки и из производных классов.
 - **private protected**: такой член класса доступен из любого места в текущем классе или в производных классах, которые определены в той же сборке.
 
+## Модификатор readonly  
+```
+class MathLib
+{
+    public readonly double K = 23;  // можно так инициализировать
+ 
+    public MathLib(double _k)
+    {
+        K = _k; // поле для чтения может быть инициализировано или изменено в конструкторе после компиляции
+    }
+    public void ChangeField()
+    {
+        // так нельзя
+        //K = 34;
+    }
+}
+ 
+class Program
+{
+    static void Main(string[] args)
+    {
+        MathLib mathLib = new MathLib(3.8);
+        Console.WriteLine(mathLib.K); // 3.8
+ 
+        //mathLib.K = 7.6; // поле для чтения нельзя установить вне своего класса
+        Console.ReadLine();
+ 
+    }
+}
+```
+
 ## Модификатор static  
 Статические поля, методы, свойства относятся ко всему классу (хранят состояние класса в целом, а не отдельного объекта) и для обращения к подобным членам класса необязательно создавать экземпляр класса.  
 
@@ -804,14 +835,51 @@ class Program
 }
 
 class Account
+{
+    public static decimal bonus = 100; // На уровне памяти для статических полей будет создаваться участок в памяти (в куче), который будет общим для всех объектов класса.
+    public decimal totalSum;
+    public Account(decimal sum)
     {
-        public static decimal bonus = 100; // На уровне памяти для статических полей будет создаваться участок в памяти (в куче), который будет общим для всех объектов класса.
-        public decimal totalSum;
-        public Account(decimal sum)
-        {
-            totalSum = sum + bonus; 
-        }
+        totalSum = sum + bonus; 
     }
+}
+
+// ---------------------------
+
+static class Account // Классы объявляются с модификатором static и могут содержать только статические поля, свойства и методы
+{
+    private static decimal minSum = 100; // минимальная допустимая сумма для всех счетов
+    public static decimal MinSum
+    {
+        get { return minSum; }
+        set { if(value>0) minSum = value; }
+    }
+ 
+    // подсчет суммы на счете через определенный период по определенной ставке
+    public static decimal GetSum(decimal sum, decimal rate, int period)
+    {
+        decimal result = sum;
+        for (int i = 1; i <= period; i++)
+            result = result + result * rate / 100;
+        return result;
+    }
+}
+```
+
+## Константы
+```
+class MathLib
+{
+    public const double PI=3.141;
+}
+ 
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine(MathLib.PI); // Неявно это статическое поле (не нужен модификатор static), для обращения к ней необходимо использовать имя класса
+    }
+}
 ```
 
 ## Свойства
