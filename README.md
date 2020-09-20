@@ -1028,3 +1028,30 @@ class Program
     }
 }
 ```
+
+## null
+Переменные ссылочных типов могут принимать значение null, это их значение по умолчанию.
+```
+object o = null;
+string s = null;
+```
+**null-объединения (??)**  
+Оператор ?? возвращает левый операнд, если этот операнд не равен null. Иначе возвращается правый операнд.
+```
+object x = null;
+object y = x ?? 100;  // равно 100, так как x равен null
+ 
+object z = 200;
+object t = z ?? 44; // равно 200, так как z не равен null
+
+int x = 44;
+int y = x ?? 100; // ошибка, x - значимый тип, не может принимать null
+```
+**Оператор условного null (?)** 
+```
+string companyName = user?.Phone?.Company?.Name; // Если же на каком-то этапе один из объектов окажется равным null, то companyName будет иметь значение по умолчанию, то есть null.
+
+User user = new User();
+string companyName = user?.Phone?.Company?.Name ?? "не установлено";
+Console.WriteLine(companyName);
+```
