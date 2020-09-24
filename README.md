@@ -1055,3 +1055,99 @@ User user = new User();
 string companyName = user?.Phone?.Company?.Name ?? "не установлено";
 Console.WriteLine(companyName);
 ```
+## Наследование  
+По умолчанию все классы наследуются от базового класса Object, даже если мы явным образом не устанавливаем наследование. Поэтому выше определенные классы Person и Employee кроме своих собственных методов, также будут иметь и методы класса Object: ToString(), Equals(), GetHashCode() и GetType().
+```
+class Person // базовый класс
+{
+    private string _name;
+ 
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+    public void Display()
+    {
+        Console.WriteLine(Name);
+    }
+}
+
+class Employee : Person // производный класс : базовый класс
+{
+     
+}
+
+static void Main(string[] args)
+{
+    Person p = new Person { Name = "Tom"};
+    p.Display();
+    p = new Employee { Name = "Sam" };
+    p.Display();
+    
+    Person p2 = new Employee(); // объект Employee является также и объектом Person
+    Console.Read();
+}
+```
+**Ключевое слово base**  
+И если в базовом классе не определен конструктор по умолчанию без параметров, а только конструкторы с параметрами (как в случае с базовым классом Person), то в производном классе мы обязательно должны вызвать один из этих конструкторов через ключевое слово base.
+```
+class Person
+{
+    public string Name { get;  set; }
+ 
+    public Person(string name)
+    {
+        Name = name;
+    }
+ 
+    public void Display()
+    {
+        Console.WriteLine(Name);
+    }
+}
+ 
+class Employee : Person
+{
+    public string Company { get; set; }
+ 
+    public Employee(string name, string company) : base(name) // вызываем конструктор базового класса для инициализации свойства Name
+    {
+        Company = company;
+    }
+}
+```
+**Порядок вызова конструкторов**
+```
+class Person
+{
+    string name;
+    int age;
+ 
+    public Person(string name)
+    {
+        this.name = name;
+        Console.WriteLine("Person(string name)");
+    }
+    public Person(string name, int age) : this(name)
+    {
+        this.age = age;
+        Console.WriteLine("Person(string name, int age)");
+    }
+}
+class Employee : Person
+{
+    string company;
+ 
+    public Employee(string name, int age, string company) : base(name, age)
+    {
+        this.company = company;
+        Console.WriteLine("Employee(string name, int age, string company)");
+    }
+}
+
+// Результат
+// Person(string name)
+// Person(string name, int age)
+// Employee(string name, int age, string company)
+```
