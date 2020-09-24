@@ -174,7 +174,7 @@ int age = Convert.ToInt32(Console.ReadLine()); // (преобразует к т�
 double height = Convert.ToDouble(Console.ReadLine()); // (преобразует к типу double)
 decimal salary = Convert.ToDecimal(Console.ReadLine()); // (преобразует к типу decimal)
 ```
-## Преобразования базовых типов данных
+## Преобразования типов данных
 Тип / В какие типы безопасно преобразуется  
 byte -> short, ushort, int, uint, long, ulong, float, double, decimal  
 sbyte -> short, int, long, float, double, decimal  
@@ -186,6 +186,101 @@ long -> float, double, decimal
 ulong -> float, double, decimal  
 float -> double  
 char -> ushort, int, uint, long, ulong, float, double, decimal  
+
+**Восходящие преобразования. Upcasting**. Преобразование от производного к базовому.
+```
+class Person
+{
+    public string Name { get; set; }
+    public Person(string name)
+    {
+        Name = name;
+    }
+    public void Display()
+    {
+        Console.WriteLine($"Person {Name}");
+    }
+}
+ 
+class Employee : Person
+{
+    public string Company { get; set; }
+    public Employee(string name, string company) : base(name)
+    {
+        Company = company;
+    }
+}
+
+static void Main(string[] args)
+{
+    Employee employee = new Employee("Tom", "Microsoft");
+    Person person = employee;   // преобразование от Employee к Person, будет доступна только часть общего с Employee функционала
+ 
+    Console.WriteLine(person.Name);
+    Console.ReadKey();
+}
+```
+**Нисходящие преобразования. Downcasting**. Преобразование от базового к производному.
+```
+Employee employee = new Employee("Tom", "Microsoft");
+Person person = employee;   // преобразование от Employee к Person, будет доступна только часть общего с Employee функционала
+ 
+//Employee employee2 = person;    // так нельзя, нужно явное преобразование
+Employee employee2 = (Employee)person;  // преобразование от Person к Employee
+```
+**Еще примеры**
+```
+// Объект Employee также представляет тип object
+object obj = new Employee("Bill", "Microsoft");
+ 
+// преобразование к типу Person для вызова метода Display
+((Person)obj).Display();
+// либо так
+// ((Employee)obj).Display();
+ 
+// преобразование к типу Employee, чтобы получить свойство Company
+string comp = ((Employee)obj).Company;
+```
+**Способы преобразований**
+```
+// Ключевое слово as, в случае неудачного преобразования выражение будет содержать значение null
+Person person = new Person("Tom");
+Employee emp = person as Employee; 
+if (emp == null)
+{
+    Console.WriteLine("Преобразование прошло неудачно");
+}
+else
+{
+    Console.WriteLine(emp.Company);
+}
+
+// Отлавливание исключения InvalidCastException, которое возникнет в результате преобразования
+
+Person person = new Person("Tom");
+try 
+{
+    Employee emp = (Employee)person;
+    Console.WriteLine(emp.Company);
+}
+catch (InvalidCastException ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
+// Третий способ заключается в проверке допустимости преобразования с помощью ключевого слова is
+Person person = new Person("Tom");
+if(person is Employee)
+{
+    Employee emp = (Employee)person;
+    Console.WriteLine(emp.Company);
+}
+else
+{
+    Console.WriteLine("Преобразование не допустимо");
+}
+```
+
 ## Условные конструкции
 **Конструкция if/else**
 ```
