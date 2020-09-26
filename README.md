@@ -1522,3 +1522,37 @@ class Program
     }
 }
 ```
+**Ограничения универсальных типов**  
+С помощью выражения where T : Account мы указываем, что используемый тип T обязательно должен быть классом Account или его наследником. Благодаря подобному ограничению мы можем использовать внутри класса Transaction все объекты типа T именно как объекты Account и соответственно обращаться к их свойствам и методам.
+```
+class Account
+{
+    public int Id { get; private set;} // номер счета
+    public int Sum { get; set; }
+    public Account(int _id)
+    {
+        Id = _id;
+    }
+}
+
+class Transaction<T> where T: Account
+{
+    public T FromAccount { get; set; }  // с какого счета перевод
+    public T ToAccount { get; set; }    // на какой счет перевод
+    public int Sum { get; set; }        // сумма перевода
+ 
+    public void Execute()
+    {
+        if (FromAccount.Sum > Sum)
+        {
+            FromAccount.Sum -= Sum;
+            ToAccount.Sum += Sum;
+            Console.WriteLine($"Счет {FromAccount.Id}: {FromAccount.Sum}$ \nСчет {ToAccount.Id}: {ToAccount.Sum}$");
+        }
+        else
+        {
+            Console.WriteLine($"Недостаточно денег на счете {FromAccount.Id}");
+        }
+    }
+}
+```
