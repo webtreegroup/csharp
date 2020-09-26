@@ -1019,6 +1019,51 @@ class Employee : Person
     }
 }
 ```
+## Модификатор new (shadowing / hiding)
+```
+class Person
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public Person(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+    }
+ 
+    public void Display()
+    {
+        Console.WriteLine($"{FirstName} {LastName}");
+    }
+}
+ 
+class Employee : Person
+{
+    public string Company { get; set; }
+    public Employee(string firstName, string lastName, string company)
+            : base(firstName, lastName)
+    {
+        Company = company;
+    }
+    public new void Display() // Фактически сокрытие представляет определение в классе-наследнике метода или свойства (а также переменных и констант), которые соответствует по имени и набору параметров методу или свойству базового класса.
+    {
+        Console.WriteLine($"{FirstName} {LastName} работает в {Company}");
+    }
+}
+
+// ---------------------
+
+class ExampleBase
+{
+    public readonly int x = 10;
+    public const int G = 5;
+}
+class ExampleDerived : ExampleBase
+{
+    public new readonly int x = 20;
+    public new const int G = 15;
+}
+```
 
 ## Константы
 ```
