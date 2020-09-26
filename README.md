@@ -1065,6 +1065,93 @@ class ExampleDerived : ExampleBase
 }
 ```
 
+## Модификатор abstract
+Абстрактный класс похож на обычный класс, за тем исключением, что мы не можем использовать конструктор абстрактного класса для создания его объекта.
+```
+abstract class Person // Общую функциональность лучше вынести в какой-то отдельный класс, например, Person, который описывает человека.
+{
+    public string Name { get; set; }
+ 
+    public Person(string name) // конструктор класса Person не вызывается напрямую, тем не менее производные классы Client и Employee могут обращаться к нему
+    {
+        Name = name;
+    }
+ 
+    public void Display()
+    {
+        Console.WriteLine(Name);
+    }
+}
+ 
+class Client : Person
+{
+    public int Sum { get; set; }    // сумма на счету
+ 
+    public Client(string name, int sum)
+        : base(name)
+    {
+        Sum = sum;
+    }
+}
+ 
+class Employee : Person
+{
+    public string Position { get; set; } // должность
+ 
+    public Employee(string name, string position) 
+        : base(name)
+    {
+            Position = position;
+    }
+}
+```
+**Абстрактные члены классов** (Методы, Свойства, Индексаторы, События).  
+Не имеют никакого функционала, но производный класс обязан переопределить и реализовать все абстрактные методы и свойства, которые имеются в базовом абстрактном классе. В случае с виртуальными методами мы говорим, что **класс-наследник наследует реализацию**, то в случае с абстрактными методами **наследуется интерфейс**, представленный этими абстрактными методами.
+```
+abstract class Person
+{
+    public string Name { get; set; }
+ 
+    public Person(string name)
+    {
+        Name = name;
+    }
+ 
+    public abstract void Display();
+}
+ 
+class Client : Person
+{
+    public int Sum { get; set; }    // сумма на счету
+ 
+    public Client(string name, int sum)
+        : base(name)
+    {
+        Sum = sum;
+    }
+    public override void Display()
+    {
+        Console.WriteLine($"{Name} имеет счет на сумму {Sum}");
+    }
+}
+ 
+class Employee : Person
+{
+    public string Position { get; set; } // должность
+ 
+    public Employee(string name, string position) 
+        : base(name)
+    {
+        Position = position;
+    }
+ 
+    public override void Display()
+    {
+        Console.WriteLine($"{Position} {Name}");
+    }
+}
+```
+
 ## Константы
 ```
 class MathLib
