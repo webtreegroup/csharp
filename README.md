@@ -960,6 +960,65 @@ static class Account // Классы объявляются с модифика�
     }
 }
 ```
+## Модификатор virtual и override, sealed
+```
+class Person
+{
+    public string Name { get; set; }
+    public Person(string name)
+    {
+        Name = name;
+    }
+    public virtual void Display() // Методы и свойства, которые мы хотим сделать доступными для переопределения помечаем как virtual
+    {
+        Console.WriteLine(Name);
+    }
+}
+
+class Employee : Person
+{
+    public string Company { get; set; }
+    public Employee(string name, string company)
+        : base(name)
+    {
+        Company = company;
+    }
+ 
+    public override void Display() // Чтобы переопределить метод в классе-наследнике помечаем как override
+    {
+        Console.WriteLine($"{Name} работает в {Company}");
+    }
+}
+
+static void Main(string[] args)
+{
+    Person p1 = new Person("Bill");
+    p1.Display(); // вызов метода Display из класса Person
+ 
+    Employee p2 = new Employee("Tom", "Microsoft");
+    p2.Display(); // вызов метода Display из класса Employee
+ 
+    Console.ReadKey();
+}
+
+// ------------------------
+
+class Employee : Person
+{
+    public string Company { get; set; }
+  
+    public Employee(string name, string company)
+                : base(name)
+    {
+        Company = company;
+    }
+ 
+    public override sealed void Display() // Запрет переопределения методов у наследников класса Employee
+    {
+        Console.WriteLine($"{Name} работает в {Company}");
+    }
+}
+```
 
 ## Константы
 ```
@@ -1209,6 +1268,25 @@ class Employee : Person
     public Employee(string name, string company) : base(name) // вызываем конструктор базового класса для инициализации свойства Name
     {
         Company = company;
+    }
+}
+```
+Кроме конструкторов, мы можем обратиться с помощью ключевого слова base к другим членам базового класса.
+```
+class Employee : Person
+{
+    public string Company { get; set; }
+  
+    public Employee(string name, string company)
+            :base(name)
+    {
+        Company = company;
+    }
+  
+    public override void Display()
+    {
+        base.Display();
+        Console.WriteLine($"работает в {Company}");
     }
 }
 ```
