@@ -1758,3 +1758,90 @@ class Program
     }
 }
 ```
+## Делегаты (указатели на методы) 
+```
+class Program
+{
+    // delegate возвращаемый_тип название (параметры)
+    delegate void Message(); // 1. Объявляем делегат
+ 
+    static void Main(string[] args)
+    {
+        Message mes; // 2. Создаем переменную делегата
+        Message mes2 = new Message(GoodMorning); // еще один способ создания объекта делегата
+        
+        if (DateTime.Now.Hour < 12)
+        {
+            mes = GoodMorning; // 3. Присваиваем этой переменной адрес метода
+        }
+        else
+        {
+            mes = GoodEvening;
+        }
+        mes(); // 4. Вызываем метод
+        Console.ReadKey();
+    }
+    private static void GoodMorning()
+    {
+        Console.WriteLine("Good Morning");
+    }
+    private static void GoodEvening()
+    {
+        Console.WriteLine("Good Evening");
+    }
+}
+
+// ------------------------
+
+class Program
+{
+    delegate int Operation(int x, int y);
+     
+    static void Main(string[] args)
+    {
+        // присваивание адреса метода через контруктор
+        Operation del = Add; // делегат указывает на метод Add
+        int result = del(4,5); // фактически Add(4, 5)
+        Console.WriteLine(result);
+ 
+        del = Multiply; // теперь делегат указывает на метод Multiply
+        result = del(4, 5); // фактически Multiply(4, 5)
+        Console.WriteLine(result);
+ 
+        Console.Read();
+    }
+    private static int Add(int x, int y)
+    {
+        return x+y;
+    }
+    private static int Multiply (int x, int y)
+    {
+        return x * y;
+    }
+}
+```
+**Добавление методов в делегат**
+```
+class Program
+{
+    delegate void Message();
+ 
+    static void Main(string[] args)
+    {
+        Message mes1 = Hello;
+        mes1 += HowAreYou;  // теперь mes1 указывает на два метода
+        mes1(); // вызываются оба метода - Hello и HowAreYou
+        mes1?.Invoke(); // еще один способ вызова делегата, тут также проверка на null, иначе если в делегате нет методов, т.е. он будет null может возникнуть исключение
+        Console.Read();
+    }
+    private static void Hello()
+    {
+        Console.WriteLine("Hello");
+    }
+    private static void HowAreYou()
+    {
+        Console.WriteLine("How are you?");
+    }
+}
+```
+Если делегат возвращает некоторое значение, то возвращается значение последнего метода из списка вызова (если в списке вызова несколько методов)
