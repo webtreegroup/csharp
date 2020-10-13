@@ -1556,3 +1556,205 @@ class Transaction<T> where T: Account
     }
 }
 ```
+## Обработка исключений
+```
+try
+{
+     // вначале выполняются все инструкции в блоке try
+}
+catch (тип_исключения) // тип указывать не обязательно
+{
+     // если же в блоке try вдруг возникает исключение, то обычный порядок выполнения останавливается, и среда CLR начинает искать блок catch
+}
+finally
+{
+     // выполняется в любом случае
+}
+```
+Если нужный блок catch не найден, то при возникновении исключения программа аварийно завершает свое выполнение.
+```
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            int x = 5;
+            int y = x / 0;
+            Console.WriteLine($"Результат: {y}");
+        }
+        catch
+        {
+            Console.WriteLine("Возникло исключение!");
+        }
+        finally
+        {
+            Console.WriteLine("Блок finally");
+        }
+        Console.WriteLine("Конец программы");
+        Console.Read();
+    }
+}
+```
+Таким образом, программа по-прежнему не будет выполнять деление на ноль и соответственно не будет выводить результат этого деления, но теперь она не будет аварийно завершаться, а исключение будет обрабатываться в блоке catch.  
+
+**Фильтры исключений**
+```
+int x = 1;
+int y = 0;
+ 
+try
+{
+    int result = x / y;
+}
+catch(DivideByZeroException) when (y==0 && x == 0) // В этом случае обработка исключения в блоке catch производится только в том случае, если условие в выражении when истинно
+{
+    Console.WriteLine("y не должен быть равен 0");
+}
+catch(DivideByZeroException ex)
+{
+    Console.WriteLine(ex.Message);
+}
+```
+**Типы исключений. Класс Exception**  
+Базовым для всех типов исключений является тип Exception, свойства:  
+- **InnerException**: хранит информацию об исключении, которое послужило причиной текущего исключения
+- **Message**: хранит сообщение об исключении, текст ошибки
+- **Source**: хранит имя объекта или сборки, которое вызвало исключение
+- **StackTrace**: возвращает строковое представление стека вызывов, которые привели к возникновению исключения
+- **TargetSite**: возвращает метод, в котором и было вызвано исключение
+```
+static void Main(string[] args)
+{
+    try
+    {
+        int x = 5;
+        int y = x / 0;
+        Console.WriteLine($"Результат: {y}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Исключение: {ex.Message}");
+        Console.WriteLine($"Метод: {ex.TargetSite}");
+        Console.WriteLine($"Трассировка стека: {ex.StackTrace}");
+    }
+ 
+    Console.Read();
+}
+```
+**Возможные типы исключений**
+- **DivideByZeroException**: представляет исключение, которое генерируется при делении на ноль
+- **ArgumentOutOfRangeException**: генерируется, если значение аргумента находится вне диапазона допустимых значений
+- **ArgumentException**: генерируется, если в метод для параметра передается некорректное значение
+- **IndexOutOfRangeException**: генерируется, если индекс элемента массива или коллекции находится вне диапазона допустимых значений
+- **InvalidCastException**: генерируется при попытке произвести недопустимые преобразования типов
+- **NullReferenceException**: генерируется при попытке обращения к объекту, который равен null (то есть по сути неопределен)
+```
+static void Main(string[] args)
+{
+    try
+    {
+        int[] numbers = new int[4];
+        numbers[7] = 9;     // IndexOutOfRangeException
+ 
+        int x = 5;
+        int y = x / 0;  // DivideByZeroException
+        Console.WriteLine($"Результат: {y}");
+    }
+    catch (DivideByZeroException)
+    {
+        Console.WriteLine("Возникло исключение DivideByZeroException");
+    }
+    catch (IndexOutOfRangeException ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+             
+    Console.Read();
+}
+```
+## Создание классов исключений
+```
+class PersonException : Exception // можно наследоваться от любого другого типа исключения
+{
+    public PersonException(string message)
+        : base(message)
+    { }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            Person p = new Person { Name = "Tom", Age = 17 };
+        }
+        catch (PersonException ex)
+        {
+            Console.WriteLine("Ошибка: " + ex.Message);
+        }
+        Console.Read();
+    }
+}
+class Person
+{
+    private int age;
+    public int Age
+    {
+        get { return age; }
+        set
+        {
+            if (value < 18)
+                throw new PersonException("Лицам до 18 регистрация запрещена");
+            else
+                age = value;
+        }
+    }
+}
+```
+Каждый тип исключений может определять какие-то свои свойства. Например, в данном случае мы можем определить в классе свойство для хранения устанавливаемого значения:
+```
+class PersonException : ArgumentException
+{
+    public int Value { get;}
+    public PersonException(string message, int val)
+        : base(message)
+    {
+        Value = val;
+    }
+}
+
+class Person
+{
+    public string Name { get; set; }
+    private int age;
+    public int Age
+    {
+        get { return age; }
+        set
+        {
+            if (value < 18)
+                throw new PersonException("Лицам до 18 регистрация запрещена", value);
+            else
+                age = value;
+        }
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            Person p = new Person { Name = "Tom", Age = 13 };
+        }
+        catch (PersonException ex)
+        {
+            Console.WriteLine($"Ошибка: {ex.Message}");
+            Console.WriteLine($"Некорректное значение: {ex.Value}");
+        }
+        Console.Read();
+    }
+}
+```
