@@ -29,8 +29,9 @@
 - [Обобщенные типы (generics)](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%BE%D0%B1%D0%BE%D0%B1%D1%89%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5-%D1%82%D0%B8%D0%BF%D1%8B-generics)
 - [Обработка исключений](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0-%D0%B8%D1%81%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B9)
 - [Создание классов исключений](https://github.com/webtreegroup/csharp/blob/master/README.md#%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%BE%D0%B2-%D0%B8%D1%81%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B9)
-- [Делегаты (указатели на методы)](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B4%D0%B5%D0%BB%D0%B5%D0%B3%D0%B0%D1%82%D1%8B-%D1%83%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B)
 - [Интерфейсы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81%D1%8B)
+- [Делегаты (указатели на методы)](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B4%D0%B5%D0%BB%D0%B5%D0%B3%D0%B0%D1%82%D1%8B-%D1%83%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B)
+- [События]()
 
 ## Объявление переменных (названия регистрозависимые)
 **тип имя_переменной;** 
@@ -1962,5 +1963,69 @@ interface IMovable
     delegate void MoveHandler(string message);  // определение делегата для события
     // событие
     event MoveHandler MoveEvent;    // событие движения
+}
+```
+
+## События
+```
+class Account
+{
+    public delegate void AccountHandler(string message);    
+    public event AccountHandler Notify;              // 1.Определение события. Название для события может быть произвольным, но в любом случае оно должно представлять некоторый делегат.
+    
+    public Account(int sum)
+    {
+        Sum = sum;
+    }
+    
+    public int Sum { get; private set; }
+    
+    public void Put(int sum)    
+    {
+        Sum += sum;
+        Notify?.Invoke($"На счет поступило: {sum}");   // 2.Вызов события. Если бы в данном случае обработчик не был бы установлен, то при вызове события Notify?.Invoke() ничего не происходило, так как событие Notify было бы равно null.
+    }
+    
+    public void Take(int sum)
+    {
+        if (Sum >= sum)
+        {
+            Sum -= sum;
+            Notify?.Invoke($"Со счета снято: {sum}");   // 2.Вызов события
+        }
+        else
+        {
+            Notify?.Invoke($"Недостаточно денег на счете. Текущий баланс: {Sum}"); ;
+        }
+    }
+}
+```
+```
+class Program
+{
+    static void Main(string[] args)
+    {
+        Account acc = new Account(100);
+        acc.Notify += DisplayMessage;       // добавляем обработчик DisplayMessage
+        acc.Notify += DisplayRedMessage;    // добавляем обработчик DisplayRedMessage
+        acc.Put(20);    // добавляем на счет 20
+        acc.Notify -= DisplayRedMessage;     // удаляем обработчик DisplayRedMessage
+        acc.Put(20);    // добавляем на счет 20
+        Console.Read();
+    }
+ 
+    private static void DisplayMessage(string message)
+    {
+        Console.WriteLine(message);
+    }
+ 
+    private static void DisplayRedMessage(String message)
+    {
+        // Устанавливаем красный цвет символов
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(message);
+        // Сбрасываем настройки цвета
+        Console.ResetColor();
+    }
 }
 ```
