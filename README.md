@@ -2029,3 +2029,37 @@ class Program
     }
 }
 ```
+
+## Работа с потоками и файловой системой
+```
+class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            using (var sw = new StreamWriter("test.txt", false, Encoding.UTF8))
+            {
+                sw.WriteLine("Hello");
+                sw.WriteLine("Hello, User");
+                sw.WriteLine("Привет");
+            }
+
+            using (var sr = new StreamReader("test.txt", Encoding.UTF8))
+            {
+                while(!sr.EndOfStream)
+                {
+                    Console.WriteLine(sr.ReadLine() + "конец строки");
+                }
+
+                sr.DiscardBufferedData();
+                sr.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                var text = sr.ReadToEnd();
+                Console.Write(text);
+            }
+
+            Console.ReadLine();
+        }
+    }
+```
