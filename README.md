@@ -2171,3 +2171,72 @@ namespace Lesson17
     }
 }
 ```
+## SQL базы данных и Entity Framework
+**Модель БД**
+```
+namespace ConsoleApp2
+{
+    public class User
+    {
+        public int Id { get; set; } // соответствуют полям таблицы
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+}
+```
+**Класс контекста БД**
+```
+using Microsoft.EntityFrameworkCore;
+
+namespace ConsoleApp2
+{
+    public class ApplicationContext : DbContext
+    {
+        public DbSet<User> Users { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=forMigrationsTest;Username=postgres;Password=postgres"); // подключение к БД
+        }
+    }
+}
+```
+**Наша программа**
+```
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // добавление данных
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                // создаем два объекта User
+                User user1 = new User { Name = "Tom", Age = 33 };
+                User user2 = new User { Name = "Alice", Age = 26 };
+
+                // добавляем их в бд
+                db.Users.AddRange(user1, user2);
+                db.SaveChanges();
+            }
+            
+            // получение данных
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                // получаем объекты из бд и выводим на консоль
+                var users = db.Users.ToList();
+                Console.WriteLine("Users list:");
+                foreach (User u in users)
+                {
+                    Console.WriteLine($"{u.Id}.{u.Name} - {u.Age}");
+                }
+            }
+        }
+    }
+}
+```
