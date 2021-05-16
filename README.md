@@ -37,6 +37,7 @@
 - [SQL базы данных и Entity Framework](https://github.com/webtreegroup/csharp/blob/master/README.md#sql-%D0%B1%D0%B0%D0%B7%D1%8B-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D0%B8-entity-framework)
 - [LINQ](https://metanit.com/sharp/tutorial/15.1.php)
 - [Методы расширения](https://metanit.com/sharp/tutorial/3.18.php)
+- [Индексаторы]
 
 ## Объявление переменных (названия регистрозависимые)
 **тип имя_переменной;** 
@@ -2242,6 +2243,67 @@ namespace ConsoleApp2
                 }
             }
         }
+    }
+}
+```
+## Индексаторы
+С помощью индексаторов мы можем работать с объектами как с массивами.  
+**Определение индексатора:**
+```
+возвращаемый_тип this [Тип параметр1, ...]
+{
+    get { ... } // Как и в свойствах, в индексаторах можно опускать блок get или set, если в них нет необходимости.
+    set { ... } // Также мы можем ограничивать доступ к блокам get и set, используя модификаторы доступа.
+}
+```
+**Пример:**
+```
+class User
+{
+    string name;
+    string email;
+    string phone;
+ 
+    public string this[string propname]
+    {
+        get
+        {
+            switch (propname)
+            {
+                case "name": return "Mr/Ms. " + name;
+                case "email": return email;
+                case "phone": return phone;
+                default: return null;
+            }
+        }
+        set
+        {
+            switch (propname)
+            {
+                case "name":
+                    name = value;
+                    break;
+                case "email":
+                    email = value;
+                    break;
+                case "phone":
+                    phone = value;
+                    break;
+            }
+        }
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        User tom = new User();
+        tom["name"] = "Tom";
+        tom["email"] = "tomekvilmovskiy@gmail.ru";
+ 
+        Console.WriteLine(tom["name"]); // Mr/Ms. Tom
+ 
+        Console.ReadKey();
     }
 }
 ```
