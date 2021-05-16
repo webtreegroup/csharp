@@ -22,6 +22,7 @@
 - [Модификатор abstract](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%BC%D0%BE%D0%B4%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%BE%D1%80-abstract)
 - [Константы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%BA%D0%BE%D0%BD%D1%81%D1%82%D0%B0%D0%BD%D1%82%D1%8B)
 - [Свойства](https://github.com/webtreegroup/csharp/blob/master/README.md#%D1%81%D0%B2%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%B0)
+- [Индексаторы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%B0%D1%82%D0%BE%D1%80%D1%8B)
 - [Перегрузка методов](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%BF%D0%B5%D1%80%D0%B5%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B0-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D0%BE%D0%B2)
 - [Перегрузка операторов](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%BF%D0%B5%D1%80%D0%B5%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B0-%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2)
 - [null](https://github.com/webtreegroup/csharp/blob/master/README.md#null)
@@ -37,7 +38,6 @@
 - [SQL базы данных и Entity Framework](https://github.com/webtreegroup/csharp/blob/master/README.md#sql-%D0%B1%D0%B0%D0%B7%D1%8B-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D0%B8-entity-framework)
 - [LINQ](https://metanit.com/sharp/tutorial/15.1.php)
 - [Методы расширения](https://metanit.com/sharp/tutorial/3.18.php)
-- [Индексаторы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B8%D0%BD%D0%B4%D0%B5%D0%BA%D1%81%D0%B0%D1%82%D0%BE%D1%80%D1%8B)
 
 ## Объявление переменных (названия регистрозависимые)
 **тип имя_переменной;** 
