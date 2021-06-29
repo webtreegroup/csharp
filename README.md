@@ -2307,3 +2307,27 @@ class Program
     }
 }
 ```
+## Анонимные типы
+
+Анонимные типы позволяют создать объект с некоторым набором свойств без определения класса. Свойства анонимных типов доступны только для чтения.
+```
+var user = new { Name = "Tom", Age = 34 };
+Console.WriteLine(user.Name);
+
+class User
+{
+    public string Name { get; set; }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        User tom = new User { Name = "Tom" };
+        int age = 34;
+        var student = new { tom.Name, age}; // инициализатор с проекцией
+        Console.WriteLine(student.Name);
+        Console.WriteLine(student.age);
+        Console.Read();
+    }
+}
+```
