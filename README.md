@@ -38,6 +38,8 @@
 - [SQL базы данных и Entity Framework](https://github.com/webtreegroup/csharp/blob/master/README.md#sql-%D0%B1%D0%B0%D0%B7%D1%8B-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D0%B8-entity-framework)
 - [LINQ](https://metanit.com/sharp/tutorial/15.1.php)
 - [Методы расширения](https://metanit.com/sharp/tutorial/3.18.php)
+- [Анонимные типы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B0%D0%BD%D0%BE%D0%BD%D0%B8%D0%BC%D0%BD%D1%8B%D0%B5-%D1%82%D0%B8%D0%BF%D1%8B)
+- [Анонимные методы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B0%D0%BD%D0%BE%D0%BD%D0%B8%D0%BC%D0%BD%D1%8B%D0%B5-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B)
 
 ## Объявление переменных (названия регистрозависимые)
 **тип имя_переменной;** 
