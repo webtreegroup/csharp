@@ -2331,3 +2331,42 @@ class Program
     }
 }
 ```
+## Анонимные методы
+Анонимный метод не может существовать сам по себе, он используется для инициализации экземпляра делегата. И через эту переменную делегата можно вызвать данный анонимный метод.  
+Анонимные методы используются в ситуациях, когда нам надо определить однократное действие, которое не имеет много инструкций и нигде больше не используется.  
+```
+class Program
+{
+    delegate void MessageHandler(string message);
+    static void Main(string[] args)
+    {
+        MessageHandler handler = delegate(string mes)
+        {
+            Console.WriteLine(mes);
+        };
+        handler("hello world!");
+ 
+        Console.Read();
+    }
+}
+
+// -----------------
+
+class Program
+{
+    delegate void MessageHandler(string message);
+    static void Main(string[] args)
+    {
+        ShowMessage("hello!", delegate(string mes)
+        {
+            Console.WriteLine(mes);
+        });
+ 
+        Console.Read();
+    }
+    static void ShowMessage(string mes, MessageHandler handler)
+    {
+        handler(mes);
+    }
+}
+```
