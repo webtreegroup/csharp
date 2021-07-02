@@ -40,6 +40,7 @@
 - [Методы расширения](https://metanit.com/sharp/tutorial/3.18.php)
 - [Анонимные типы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B0%D0%BD%D0%BE%D0%BD%D0%B8%D0%BC%D0%BD%D1%8B%D0%B5-%D1%82%D0%B8%D0%BF%D1%8B)
 - [Анонимные методы](https://github.com/webtreegroup/csharp/blob/master/README.md#%D0%B0%D0%BD%D0%BE%D0%BD%D0%B8%D0%BC%D0%BD%D1%8B%D0%B5-%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B)
+- [Атрибуты]()
 
 ## Объявление переменных (названия регистрозависимые)
 **тип имя_переменной;** 
@@ -2370,5 +2371,71 @@ class Program
     {
         handler(mes);
     }
+}
+```
+## Атрибуты
+Атрибуты в .NET представляют специальные инструменты, которые позволяют встраивать в сборку дополнительные метаданные. Атрибуты могут применяться как ко всему типу (классу, интерфейсу и т.д.), так и к отдельным его частям (методу, свойству и т.д.). Основу атрибутов составляет класс System.Attribute, от которого образованы все остальные классы атрибутов.  
+
+Допустим, нам надо проверять пользователя на соответствие некоторым возрастным ограничениям. Создадим свой атрибут, который будет хранить пороговое значение возраста, с которого разрешены некоторые действия:
+```
+public class AgeValidationAttribute : System.Attribute // По сути это обычный класс, унаследованный от System.Atribute.
+{
+    public int Age { get; set; }
+     
+    public AgeValidationAttribute()
+    { }
+     
+    public AgeValidationAttribute(int age)
+    {
+        Age = age;
+    }
+}
+
+[AgeValidation(18)] // Суффикс Attribute указывать необязательно. То есть фактически мы говорим, что в AgeValidationAttribute свойство Age будет иметь значение 18.
+public class User
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public User(string n, int a)
+    {
+        Name = n;
+        Age = a;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        User tom = new User("Tom", 35);
+        User bob = new User("Bob", 16);
+        bool tomIsValid = ValidateUser(tom);    // true
+        bool bobIsValid = ValidateUser(bob);    // false
+ 
+        Console.WriteLine($"Реультат валидации Тома: {tomIsValid}");
+        Console.WriteLine($"Реультат валидации Боба: {bobIsValid}");
+        Console.ReadLine();
+    }
+    
+    static bool ValidateUser(User user)
+    {
+        Type t = typeof(User); // Теперь получим с помощью рефлексии атрибут класса User и используем его для проверки объектов данного класса.
+        object[] attrs = t.GetCustomAttributes(false);
+        foreach (AgeValidationAttribute attr in attrs)
+        {
+            if (user.Age >= attr.Age) return true;
+            else return false;
+        }
+        return true;
+    }
+}
+```
+**Ограничение применения атрибута**  
+С помощью атрибута AttributeUsage можно ограничить типы, к которым будет применяться атрибут. Например, мы хотим, чтобы выше определенный атрибут мог применяться только к классам:
+```
+[AttributeUsage(AttributeTargets.Class)] // Ограничение задает перечисление AttributeTargets, можно и так [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)] 
+public class RoleInfoAttribute : System.Attribute
+{
+//....................................
 }
 ```
